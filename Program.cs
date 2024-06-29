@@ -1,141 +1,125 @@
-﻿using System.Data.Common;
-using System.Runtime.InteropServices;
-using clases;
+﻿﻿using EspacioCalculadora;
 internal class Program
 {
     private static void Main(string[] args)
     {
-        int id = 1000;
-        int opcion;
-        string entrada;
-        int tareasTotales;
-        var listaTareasPendientes = new List<Tarea>();
-        var listaTareasRealizadas = new List<Tarea>();
-        Random random = new Random();
-        tareasTotales = random.Next(10);
-
-        for (int i = 0; i < tareasTotales; i++)
-        {
-            var tarea = new Tarea(id++,$"Tarea {i}, (generada automáticamente)",random.Next(10,101));
-            listaTareasPendientes.Add(tarea);
-        }
-
+        Calculadora calc = new Calculadora();
+        String opcion;
+        Double numero;
         Console.Clear();
-        Menu.Show();
-
         do
-        {
-            entrada = Console.ReadLine();
-            if (int.TryParse(entrada,out opcion))
+        {   
+            calc.MostrarHistorial();
+            calc.Menu();
+            Console.Write("Ingrese una opción: ");
+            opcion = Console.ReadLine();
+            switch (opcion)
             {
-                switch (opcion)
+                case "1":
+                do
                 {
-                    case 1 :
-                    Console.Clear();
-                    do
+                    Console.Write("Ingresar número: ");
+                    if (double.TryParse(Console.ReadLine(), out numero))
                     {
-                        Console.WriteLine("Ingrese una descripcion para la tarea:");
-                        entrada = Console.ReadLine();
-                        var tarea = new Tarea(id++,entrada,random.Next(10,101));
-                        listaTareasPendientes.Add(tarea);
-                        Console.WriteLine("Tarea creada exitosamente.");
-                        Console.WriteLine("Desea agregar otra tarea? (1)Si (2)No");
-                        entrada = Console.ReadLine();
-                        if (!int.TryParse(entrada,out opcion) && opcion != 2 && opcion != 1)
+                        calc.Sumar(numero);
+                        Console.Clear();
+                        Console.WriteLine("Resultado = " + calc.Resultado);
+                        Console.WriteLine("1. Sumar otro número");
+                        Console.WriteLine("2. Terminar operacion");
+                        Console.Write("Ingrese una opción: ");
+                        opcion = Console.ReadLine();
+                        if (opcion != "2" && opcion != "1")
                         {
                             Console.Clear();
-                            Console.WriteLine("Opcion invalida.");
-                            continue;                    
-                        }
-                    } while (opcion == 1);
-                    break;
-
-
-                    case 2:
-                    Tarea.MostrarLista(listaTareasPendientes,"Lista de tareas pendientes:");
-                    Console.WriteLine("Ingrese el id de la tarea que desea marcar como completada");
-                    entrada = Console.ReadLine();
-                    bool tareaEncontrada = false;
-                    if (int.TryParse(entrada,out opcion)){
-                        foreach (var tarea in listaTareasPendientes)
-                        {
-                            if (tarea.TareaId == opcion)
-                            {
-                                listaTareasRealizadas.Add(tarea);
-                                listaTareasPendientes.Remove(tarea);
-                                Console.WriteLine("Tarea marcada como completada.");
-                                tareaEncontrada = true;
-                                break;
-                            }
-                        }
-                    }else
-                    {
-                        Console.Clear();
-                        Console.WriteLine("Opcion invalida.");
-                    }
-                    if (!tareaEncontrada)
-                    {
-                        Console.Clear();
-                        Console.WriteLine("Tarea no encontrada");
-                    }
-                    break;
-
-                    case 3:Console.Clear();
-                    Tarea.MostrarLista(listaTareasRealizadas,"Lista de tareas completadas:");
-                    Console.WriteLine("----------------------------------");
-                    Tarea.MostrarLista(listaTareasPendientes,"Lista de tareas pendientes");
-                    Console.WriteLine("----------------------------------");
-                    break;
-
-                    case 4:
-                    bool encontrada = false;
-                    Console.WriteLine("Ingrese el Id de la tarea o ingrese una palabra clave para buscar la tarea.");
-                    entrada = Console.ReadLine();
-                    if (int.TryParse(entrada,out opcion))
-                    {
-                        if (!Tarea.BuscarTareaPorId(opcion,listaTareasPendientes))
-                        {
-                            encontrada = Tarea.BuscarTareaPorId(opcion,listaTareasRealizadas);
-                        }else
-                        {
-                            encontrada = true;
-                        }
-                    }else
-                    {
-                        if (!Tarea.BuscarTareaPorPalabra(entrada, listaTareasPendientes))
-                        {
-                            encontrada = Tarea.BuscarTareaPorPalabra(entrada, listaTareasRealizadas);
-                        }else
-                        {
-                            Tarea.BuscarTareaPorPalabra(entrada, listaTareasRealizadas);
-                            encontrada = true;
+                            Console.WriteLine("ERROR - Opcion no válida");
+                            break;
                         }
                     }
-                    if (!encontrada){
-                        Console.Clear();
-                        Console.WriteLine("Tarea no encontrada");
-                        Console.WriteLine("Presione una tecla para continuar...");
-                        Console.ReadKey();
-                    }
-                    break;
-                    
-                    case 5:
-                    Console.WriteLine("Saliendo...");
-                    break;
-
-                    default:
                     Console.Clear();
-                    Console.WriteLine("Opcion no valida");
-                    break;
-                }
-            }else
-            {
+                } while (opcion == "1");
+                break;
+
+                case "2":
+                do
+                {
+                    Console.Write("Ingresar número: ");
+                    if (double.TryParse(Console.ReadLine(), out numero))
+                    {
+                        calc.Restar(numero);
+                        Console.Clear();
+                        Console.WriteLine("Resultado = " + calc.Resultado);
+                        Console.WriteLine("1. Restar otro número");
+                        Console.WriteLine("2. Terminar operacion");
+                        Console.Write("Ingrese una opción: ");
+                        opcion = Console.ReadLine();
+                        if (opcion != "2" && opcion != "1")
+                        {
+                            Console.Clear();
+                            Console.WriteLine("ERROR - Opcion no válida");
+                            break;
+                        }
+                    }
+                    Console.Clear();
+                } while (opcion == "1");
+                break;
+
+                case "3":
+                do
+                {
+                    Console.Write("Ingresar número: ");
+                    if (double.TryParse(Console.ReadLine(), out numero))
+                    {
+                        calc.Multiplicar(numero);
+                        Console.Clear();
+                        Console.WriteLine("Resultado = " + calc.Resultado);
+                        Console.WriteLine("1. Multiplicar otro número");
+                        Console.WriteLine("2. Terminar operacion");
+                        Console.Write("Ingrese una opción: ");
+                        opcion = Console.ReadLine();
+                        if (opcion != "2" && opcion != "1")
+                        {
+                            Console.Clear();
+                            Console.WriteLine("ERROR - Opcion no válida");
+                            break;
+                        }
+                    }
+                    Console.Clear();
+                } while (opcion == "1");
+                break;
+                case "4":
+                do
+                {
+                    Console.Write("Ingresar número: ");
+                    if (double.TryParse(Console.ReadLine(), out numero))
+                    {
+                        Console.Clear();
+                        calc.Dividir(numero);
+                        Console.WriteLine("Resultado = " + calc.Resultado);
+                        Console.WriteLine("1. Dividir otro número");
+                        Console.WriteLine("2. Terminar operacion");
+                        Console.Write("Ingrese una opción: ");
+                        opcion = Console.ReadLine();
+                        if (opcion != "2" && opcion != "1")
+                        {
+                            Console.Clear();
+                            Console.WriteLine("ERROR - Opcion no válida");
+                            break;
+                        }
+                    }
+                    Console.Clear();
+                } while (opcion == "1");
+
+                break;
+                case "5":
                 Console.Clear();
-                Console.WriteLine("Opcion invalida");
-                Menu.Show();
+                calc.Limpiar();
+
+                break;
+                case "0":
+                    Console.WriteLine("Saliendo...");
+                break;
             }
-        } while (opcion != 5);
 
+        } while (opcion != "0");
     }
-
 }
